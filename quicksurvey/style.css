@@ -1,0 +1,221 @@
+/* =======================================================
+   QuickSurvey — hoja de estilos
+   REGLA CRITICA: ninguna tarjeta depende de una animacion
+   (opacity:0, animation, fill-mode) para ser visible. Si el
+   navegador no la ejecuta, la pantalla se queda en blanco.
+   ======================================================= */
+
+/* 1. VARIABLES DEL TEMA */
+:root {
+  --primary: #4f46e5;
+  --primary-dark: #4338ca;
+  --primary-soft: #eef2ff;
+  --danger: #dc2626;
+  --danger-soft: #fef2f2;
+  --danger-border: #fecaca;
+  --success: #15803d;
+  --success-soft: #f0fdf4;
+  --bg: #eef1f6;
+  --surface: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --radius: 12px;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --font: "Segoe UI", system-ui, -apple-system, Arial, sans-serif;
+}
+
+/* 2. BASE */
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 30px 16px;
+  font-family: var(--font);
+  line-height: 1.55;
+  color: var(--text);
+  background: linear-gradient(165deg, #e8ecf8, var(--bg) 45%, #f7f9fc);
+}
+
+.container { max-width: 720px; margin-inline: auto; }
+.hidden { display: none !important; }
+
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* 3. ENCABEZADO Y PIE */
+.app-header { text-align: center; margin-bottom: 22px; }
+
+#logo {
+  display: inline-flex; align-items: center; gap: 10px;
+  margin: 0; font-size: 1.9rem; color: var(--primary-dark);
+}
+
+.logo-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; font-size: 1.3rem;
+  background: var(--primary); border-radius: var(--radius);
+  box-shadow: 0 6px 14px rgba(79, 70, 229, 0.35);
+}
+
+.subtitle { margin: 10px 0 4px; font-weight: 600; }
+.description { max-width: 540px; margin: 0 auto; font-size: 0.92rem; color: var(--muted); }
+.app-footer { margin-top: 24px; text-align: center; font-size: 0.8rem; color: var(--muted); }
+
+.noscript-warning {
+  max-width: 720px; margin: 20px auto; padding: 12px 16px; text-align: center;
+  color: var(--danger); background: var(--danger-soft);
+  border: 1px solid var(--danger-border); border-radius: var(--radius);
+}
+
+/* 4. TARJETA Y PROGRESO */
+.card {
+  padding: 26px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow);
+}
+
+.progress-block { margin-bottom: 22px; }
+
+.progress-meta {
+  display: flex; justify-content: space-between; align-items: baseline;
+  margin-bottom: 8px; font-size: 0.9rem; color: var(--muted);
+}
+
+#progressPercent { font-weight: 700; color: var(--primary); }
+
+.progress-track {
+  height: 10px; overflow: hidden;
+  background: var(--border); border-radius: 999px;
+}
+
+#progressBar {
+  width: 0%; height: 100%;
+  background: linear-gradient(90deg, var(--primary), #818cf8);
+  border-radius: 999px; transition: width 350ms ease;
+}
+
+/* 5. PREGUNTAS */
+.question-container { display: block; min-height: 40px; }
+.question-card { display: grid; gap: 16px; }
+
+.question-title {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 10px;
+  margin: 0; font-size: 1.2rem; line-height: 1.35;
+}
+
+.badge {
+  padding: 3px 10px; font-size: 0.66rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.4px;
+  color: var(--primary-dark); background: var(--primary-soft); border-radius: 999px;
+}
+
+.hint { margin: 0; font-size: 0.85rem; color: var(--muted); }
+
+.options { display: grid; gap: 10px; margin: 0; padding: 0; border: 0; }
+.options.scale { grid-template-columns: repeat(5, 1fr); }
+
+.option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 14px; background: var(--surface);
+  border: 2px solid var(--border); border-radius: var(--radius);
+  cursor: pointer; transition: border-color 160ms ease, background 160ms ease;
+}
+
+.option:hover { background: var(--primary-soft); border-color: var(--primary); }
+.option input { flex-shrink: 0; width: 18px; height: 18px; accent-color: var(--primary); }
+.option input:checked + .option-text { color: var(--primary); font-weight: 600; }
+.option:has(input:checked) { background: var(--primary-soft); border-color: var(--primary); }
+
+.field-label { font-size: 0.9rem; font-weight: 600; }
+
+.field {
+  width: 100%; padding: 12px 14px;
+  font-family: inherit; font-size: 1rem; color: var(--text);
+  background: var(--surface); border: 2px solid var(--border);
+  border-radius: var(--radius); transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.field:focus {
+  outline: none; border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+textarea.field { min-height: 100px; resize: vertical; }
+
+/* Campo condicional: se inserta en el DOM solo con nota 1 o 2 */
+.field-group.is-dynamic {
+  padding: 14px; background: var(--primary-soft);
+  border: 1px dashed var(--primary); border-radius: var(--radius);
+}
+
+/* 6. VALIDACION */
+.question-card.is-invalid .question-title { color: var(--danger); }
+.question-card.is-invalid .option { border-color: #fca5a5; }
+.question-card.is-invalid .field { border-color: var(--danger); }
+
+.validation-message {
+  margin: 16px 0 0; padding: 10px 14px;
+  font-size: 0.9rem; color: var(--danger);
+  background: var(--danger-soft);
+  border: 1px solid var(--danger-border); border-left: 4px solid var(--danger);
+  border-radius: 8px;
+}
+
+/* 7. BOTONES */
+.nav-actions { display: flex; gap: 12px; margin-top: 24px; }
+.summary-actions { margin-top: 24px; text-align: center; }
+
+.btn {
+  padding: 12px 22px; font-family: inherit; font-size: 1rem; font-weight: 600;
+  border: 1px solid transparent; border-radius: var(--radius);
+  cursor: pointer; transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+
+.btn:focus-visible { outline: 3px solid rgba(79, 70, 229, 0.35); outline-offset: 2px; }
+.btn-primary { color: #fff; background: var(--primary); box-shadow: 0 4px 12px rgba(79, 70, 229, 0.28); }
+.btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
+.btn-secondary { color: var(--text); background: var(--surface); border-color: var(--border); }
+.btn-secondary:hover:not(:disabled) { color: var(--primary); border-color: var(--primary); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; }
+
+/* 8. RESUMEN */
+.summary-title { margin: 0 0 6px; font-size: 1.35rem; color: var(--primary-dark); }
+.summary-list { display: grid; gap: 10px; margin: 14px 0 24px; padding: 0; list-style: none; }
+
+.summary-item {
+  display: grid; gap: 4px; padding: 14px 16px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-left: 4px solid var(--primary); border-radius: var(--radius);
+}
+
+.summary-item strong { font-size: 0.95rem; }
+.answer-value { font-weight: 500; }
+.answer-empty { color: var(--muted); font-style: italic; }
+
+.stat-box {
+  padding: 18px; background: var(--success-soft);
+  border: 1px solid #bbf7d0; border-radius: var(--radius);
+}
+
+.stat-box h3 { margin: 0 0 8px; font-size: 1.05rem; color: var(--success); }
+.stat-box p { margin: 4px 0 0; font-size: 0.95rem; }
+.stat-mean { font-size: 1.25rem; font-weight: 700; color: var(--success); }
+
+/* 9. RESPONSIVE */
+@media (max-width: 560px) {
+  body { padding: 18px 10px; }
+  .card { padding: 20px 16px; }
+  #logo { font-size: 1.6rem; }
+  .question-title { font-size: 1.08rem; }
+  .nav-actions { flex-direction: column; }
+  .btn { width: 100%; }
+  .options.scale { gap: 6px; }
+  .options.scale .option { padding: 10px 4px; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition-duration: 0.001ms !important; }
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="QuickSurvey — encuesta interactiva para estudiantes de Ingenieria de Sistemas.">
+  <title>QuickSurvey — Encuesta interactiva</title>
+
+  <!-- Rutas relativas explicitas: el proyecto funciona con doble clic
+       (file://) y tambien servido desde GitHub Pages (https://usuario.github.io/repo/). -->
+  <link rel="stylesheet" href="./style.css">
+  <script src="./script.js" defer></script>
+</head>
+<body>
+
+  <header class="app-header container">
+    <h1 id="logo"><span class="logo-icon" aria-hidden="true">&#128202;</span>QuickSurvey</h1>
+    <p class="subtitle">Tu opini&oacute;n ayuda a mejorar la experiencia acad&eacute;mica.</p>
+    <p class="description">Responde las cuatro preguntas. Si tu satisfacci&oacute;n es baja te
+      preguntaremos el motivo. Al final ver&aacute;s un resumen con el promedio.</p>
+  </header>
+
+  <main class="container">
+
+    <!-- Seccion de la encuesta -->
+    <section id="surveySection" class="card">
+      <div class="progress-block">
+        <div class="progress-meta">
+          <span id="questionCounter">Pregunta 1 de 4</span>
+          <span id="progressPercent">0%</span>
+        </div>
+        <div class="progress-track">
+          <div id="progressBar" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+               aria-valuenow="0" aria-valuetext="0 por ciento completado"></div>
+        </div>
+      </div>
+
+      <!-- novalidate: la validacion se hace en JavaScript -->
+      <form id="surveyForm" novalidate>
+        <!-- Contenedor interactivo: existe en el HTML, JS solo lo puebla -->
+        <div id="questionContainer" class="question-container"></div>
+
+        <p id="validationMessage" class="validation-message hidden" role="alert" aria-live="assertive"></p>
+
+        <div class="nav-actions">
+          <button type="button" id="btnPrev" class="btn btn-secondary">Anterior</button>
+          <button type="button" id="btnNext" class="btn btn-primary">Siguiente</button>
+          <button type="button" id="btnFinish" class="btn btn-primary hidden">Finalizar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Seccion del resumen: oculta hasta pulsar Finalizar -->
+    <section id="summarySection" class="card hidden">
+      <h2 class="summary-title">Encuesta completada</h2>
+      <div id="summaryContainer"></div>
+      <div id="statsContainer"></div>
+      <div class="summary-actions">
+        <button type="button" id="btnReset" class="btn btn-primary">Reiniciar encuesta</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer container">
+    <p>QuickSurvey &middot; Encuesta interactiva &middot; Ingenieria de Sistemas</p>
+  </footer>
+
+  <noscript>
+    <p class="noscript-warning">Esta encuesta necesita JavaScript. Act&iacute;valo en tu navegador.</p>
+  </noscript>
+
+</body>
+</html>
