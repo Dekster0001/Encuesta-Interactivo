@@ -32,10 +32,9 @@ Abre `quicksurvey/index.html` con doble clic. No necesita servidor, internet ni 
 
 ```
 academicos/
-├── quicksurvey/
-│   ├── index.html   → estructura y contenedores (IDs fijos)
-│   ├── style.css    → variables CSS, diseño y responsive
-│   └── script.js    → datos, estado, construcción DOM y lógica
+├── index.html   → estructura y contenedores (IDs fijos)
+├── style.css    → variables CSS, diseño y responsive
+└── script.js    → datos, estado, construcción DOM y lógica
 └── README.MD
 ```
 
