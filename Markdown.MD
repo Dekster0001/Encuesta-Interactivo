@@ -7,10 +7,10 @@
 ---
 
 ## 2. Integrantes del Equipo
-| N° | Apellidos y Nombres | Código de Estudiante |
-| 1 | Crisostomo Palomino, Yolvy | 75448767 |
-| 2 | Apellido Paterno Materno, Nombre 2 | U20XXXXXX |
-| 3 | Apellido Paterno Materno, Nombre 3 | U20XXXXXX |
+| N° | Apellidos y Nombres         | Código de Estudiante        |
+| 1  | CRISOSTOMO PALOMINO, YOLVY  | 75448767@continental.edu.pe |
+| 2  | ORTIZ GIL, BREITNER         | 71976400@continental.edu.pe |
+| 3  | SARAVIA CHÁVEZ, ARNY        | 74355027@continental.edu.pe |
 
 ---
 
@@ -20,13 +20,12 @@
   `https://github.com/Dekster0001/Encuesta-Interactivo.git`
 
 * **Despliegue en Vivo (GitHub Pages):**  
-  `https://TU_USUARIO.github.io/NOMBRE_DEL_REPOSITORIO/`
+  `https://dekster0001.github.io/Encuesta-Interactivo/`
 
 ---
 
 ## 4. Estructura de Archivos del Repositorio
 
-quicksurvey/
-├── index.html     # Estructura semántica accesible y contenedores dinámicos
-├── style.css      # Estilos responsivos, variables CSS y clases de estado
-└── script.js      # Lógica nativa de manipulación del DOM y estado centralizado
+index.html     # Estructura semántica accesible y contenedores dinámicos
+style.css      # Estilos responsivos, variables CSS y clases de estado
+script.js      # Lógica nativa de manipulación del DOM y estado centralizado

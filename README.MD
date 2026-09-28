@@ -31,7 +31,7 @@ Abre `quicksurvey/index.html` con doble clic. No necesita servidor, internet ni 
 ## 3. Estructura
 
 ```
-academicos/
+Encuesta Academica /
 ├── index.html   → estructura y contenedores (IDs fijos)
 ├── style.css    → variables CSS, diseño y responsive
 └── script.js    → datos, estado, construcción DOM y lógica
