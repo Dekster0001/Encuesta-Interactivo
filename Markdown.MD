@@ -8,8 +8,11 @@
 
 ## 2. Integrantes del Equipo
 | N° | Apellidos y Nombres         | Código de Estudiante        |
+
 | 1  | CRISOSTOMO PALOMINO, YOLVY  | 75448767@continental.edu.pe |
+
 | 2  | ORTIZ GIL, BREITNER         | 71976400@continental.edu.pe |
+
 | 3  | SARAVIA CHÁVEZ, ARNY        | 74355027@continental.edu.pe |
 
 ---
