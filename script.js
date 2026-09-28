@@ -15,6 +15,9 @@ const questions = [
   { id: 'recursos', text: '¿Qué recursos utilizas para estudiar?',
     type: 'checkbox', options: ['Biblioteca', 'Campus virtual', 'Laboratorios', 'Tutorías'],
     required: true },
+  { id: 'q_horas_estudio', text: '¿Cuántas horas semanales dedicas al estudio autónomo fuera de clases?',
+    type: 'select', options: ['Menos de 5 horas', 'Entre 5 y 10 horas', 'Entre 11 y 15 horas', 'Más de 15 horas'],
+    required: true },
   { id: 'mejora', text: '¿Qué mejorarías de la experiencia académica?',
     type: 'text', required: false }
 ];
@@ -52,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
     || (Array.isArray(v) && v.length === 0);
   const notaBaja = () => Number(appState.answers.satisfaccion) <= 2;   // 1 o 2 sobre 5
   const motivo = () => { const a = card() && card().querySelector('#motivo'); return a ? a.value : ''; };
+  const esUltima = () => appState.currentIndex === questions.length - 1;
 
   /** Guarda la respuesta, o borra la clave si no tiene contenido real. */
   const put = (id, v) => (isEmpty(v) ? delete appState.answers[id] : (appState.answers[id] = v));
@@ -73,6 +77,26 @@ document.addEventListener('DOMContentLoaded', () => {
       area.setAttribute('placeholder', 'Escribe tu respuesta aquí…');
       area.setAttribute('aria-label', q.text);
       card.appendChild(area);
+    } else if (q.type === 'select') {
+      // DESPLEGABLE: <select> + <option> creados con createElement(). La
+      // primera opción es de cortesía y vale '' , así el required no se
+      // cumple solo por tener el control en pantalla.
+      const sel = el('select', 'field');
+      sel.setAttribute('id', q.id);
+      sel.setAttribute('name', q.id);
+      sel.setAttribute('aria-label', q.text);
+      const vacia = el('option', '', 'Selecciona una opción…');
+      vacia.setAttribute('value', '');
+      sel.appendChild(vacia);
+      q.options.forEach((option) => {
+        const opt = el('option', '', String(option));
+        opt.setAttribute('value', String(option));
+        sel.appendChild(opt);
+      });
+      // Valor preseleccionado si ya está en el estado (al retroceder).
+      const guardado = appState.answers[q.id];
+      if (guardado !== undefined) sel.value = guardado;
+      card.appendChild(sel);
     } else {
       // Escala, radio y checkbox comparten construcción: fieldset + label.
       // La escala 1-5 recibe la clase "scale" para usar 5 columnas.
@@ -115,6 +139,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function readAnswer(q) {
     if (q.type === 'text') return card().querySelector('textarea').value;
+    if (q.type === 'select') return card().querySelector('select').value;
     if (q.type === 'checkbox') {
       return Array.from(card().querySelectorAll('input:checked')).map((i) => i.value);
     }
@@ -137,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const saved = appState.answers[q.id];
     if (saved !== undefined) {
       if (q.type === 'text') card().querySelector('textarea').value = saved;
+      else if (q.type === 'select') card().querySelector('select').value = saved;
       else card().querySelectorAll('input').forEach((input) => {
         input.checked = q.type === 'checkbox'
           ? saved.includes(input.value) : input.value === String(saved);
@@ -155,6 +181,9 @@ document.addEventListener('DOMContentLoaded', () => {
       return 'Esta pregunta es obligatoria: marca una opción o escribe tu respuesta.';
     if (q.id === 'satisfaccion' && notaBaja() && motivo().trim() === '')
       return 'Indica el motivo de tu baja satisfacción para continuar.';
+    // Campo de texto libre del Finalizar: ni vacío ni solo espacios.
+    if (esUltima() && q.type === 'text' && readAnswer(q).trim() === '')
+      return 'Escribe tu respuesta antes de finalizar la encuesta.';
     return '';
   }
 
@@ -163,7 +192,11 @@ document.addEventListener('DOMContentLoaded', () => {
     box.textContent = msg;
     box.classList.toggle('hidden', !msg);
     box.classList.toggle('is-invalid', !!msg);
-    if (card()) card().classList.toggle('is-invalid', !!msg);
+    if (card()) {
+      card().classList.toggle('is-invalid', !!msg);
+      card().querySelectorAll('.field')
+        .forEach((f) => f.classList.toggle('is-invalid', !!msg));
+    }
   }
 
   /** Cada cambio guarda la respuesta; al quedar válida, el aviso se borra.
@@ -192,8 +225,8 @@ document.addEventListener('DOMContentLoaded', () => {
     restoreAnswer(question());
 
     const step = appState.currentIndex + 1;
-    // El avance mide preguntas YA RESPONDIDAS: al entrar en la 1 va a 0 %
-    // y tras el reinicio vuelve a 0 %.
+    // El avance mide preguntas YA RESPONDIDAS sobre la base de 5: al entrar
+    // en la 1 va a 0 % y tras el reinicio vuelve a 0 %.
     const percent = Math.round((appState.currentIndex / questions.length) * 100);
     const last = step === questions.length;
     $('#questionCounter').textContent = `Pregunta ${step} de ${questions.length}`;
@@ -222,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function goFinish() {
     const msg = errorActual();
-    if (msg) return setError(msg);
+    if (msg) return setError(msg);              // campo vacío: no hay resumen
     saveAnswer(question());
 
     // Red de seguridad: si una obligatoria quedara vacía, llevamos al
@@ -242,9 +275,7 @@ document.addEventListener('DOMContentLoaded', () => {
   /* --- 8. RESUMEN Y ESTADÍSTICAS (caso de prueba 4) --------------- */
 
   function renderSummary() {
-    const filas = questions.map((q) => ({ t: q.text, v: appState.answers[q.id] }));
-    if (appState.answers.motivo)
-      filas.push({ t: '¿Por qué no estás satisfecho?', v: appState.answers.motivo });
+    const filas = questions.map((q) => ({ t: q.text, v: appState.answers[q.id], id: q.id }));
 
     const list = el('ul', 'summary-list');
     filas.forEach((f) => {
@@ -253,6 +284,17 @@ document.addEventListener('DOMContentLoaded', () => {
       item.appendChild(el('strong', '', f.t));
       item.appendChild(el('span', vacio ? 'answer-empty' : 'answer-value',
         vacio ? 'Sin respuesta' : Array.isArray(f.v) ? f.v.join(', ') : String(f.v)));
+      // MOTIVO: si la nota fue baja, su texto se imprime bajo la respuesta
+      // de la Pregunta 1 en un <p> con createElement + textContent.
+      const mot = appState.answers.motivo;
+      if (f.id === 'satisfaccion' && !isEmpty(mot)) {
+        item.appendChild(el('span', 'field-label', '¿Por qué no estás satisfecho?'));
+        const p = document.createElement('p');
+        p.className = 'answer-value';        // una sola clase: sin riesgo de token
+        p.style.margin = '0';
+        p.textContent = String(mot).trim();
+        item.appendChild(p);
+      }
       list.appendChild(item);
     });
     clear($('#summaryContainer'));
